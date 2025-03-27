@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: nikita
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: paymentId
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: paymentName
+                  type: char(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: paymentDate
+                  type: date
+                  constraints:
+                    nullable: false
