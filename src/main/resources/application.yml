@@ -6,8 +6,47 @@ spring:
     name: payment-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres_db
+    url: jdbc:postgresql://localhost:5432/postgres_db?currentSchema=public
     username: postgres
     password: postgres
     hikari:
       connection-test-query:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        globally_quoted_identifiers: false
+        jdbc:
+          time_zone: UTC
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: ru.demo.kafka.serializer.PaymentSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: ru.demo.kafka.deserializer.OrderDeserializer
+    topics:
+      order-topic:
+        name: order-topic
+        partitions: 1
+        replicas: 1
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
